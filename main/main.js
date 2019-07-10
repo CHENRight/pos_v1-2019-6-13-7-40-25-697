@@ -28,26 +28,17 @@ function getTags(tags) {
     //返回  "ITEM000003", count: 2.5
 }
 
-function includeBarcode(promotionBarcode,itemBarcode) {
-    let flag = false;
-    promotionBarcode.forEach(pro =>{
-        if(pro == itemBarcode){
-            flag = true;
-        }
-    });
-    return flag;
-}
+
 
 function createReceipt(cart,database,promotionBarcode) {
     let receipt = new Array();
     cart.forEach(item => {
         database.forEach(data => {
             if(item['barcode'] == data['barcode']){
-                if(includeBarcode(promotionBarcode,item.barcode) && item.num >= 2 ){
+                if(promotionBarcode.includes(item.barcode) && item.num >= 2 ){
                     let tempsum = parseFloat(data.price) * (parseFloat(item.num) - 1.0);
                     receipt.push({'name':data['name'],'num':item['num'],'price':data['price'],'unit':data.unit,'tempsum':tempsum,'Itemdiscount':data.price});
                 }else {
-                    //let tempsum2 = data['price'] * item['num'];
                     receipt.push({'name':data['name'],'num':item['num'],'price':data['price'],'unit':data.unit,'tempsum':data['price'] * item['num'],'Itemdiscount':0.0});
                 }
             }
